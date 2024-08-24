@@ -30,7 +30,7 @@ if (!$order) {
 }
 
 // Получаем товары из заказа
-$stmt = $pdo->prepare("SELECT order_items.*, products.name, products.image FROM order_items JOIN products ON order_items.product_id = products.id WHERE order_items.order_id = :order_id");
+$stmt = $pdo->prepare("SELECT order_items.*, products.name, products.image, (order_items.price * order_items.quantity) AS total_price, (order_items.price_kzt * order_items.quantity) AS total_price_kzt FROM order_items JOIN products ON order_items.product_id = products.id WHERE order_items.order_id = :order_id");
 $stmt->execute(['order_id' => $order_id]);
 $order_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -83,7 +83,7 @@ $payment_method = isset($payment_translation[$order['payment_method']]) ? $payme
                 <p><strong>Город:</strong> <?= htmlspecialchars($order['city']) ?></p>
                 <p><strong>Email:</strong> <?= htmlspecialchars($order['email']) ?></p>
                 <p><strong>Телефон:</strong> <?= htmlspecialchars($order['phone']) ?></p>
-                <p><strong>Общая сумма:</strong> <?= htmlspecialchars($order['total_amount']) ?> $</p>
+                <p><strong>Общая сумма на момент покупки:</strong> <?= htmlspecialchars($order['total_amount']) ?> $ / <?= htmlspecialchars(number_format($order['total_amount_kzt'], 2, ',', ' ')) ?> ₸</p>
                 <p><strong>Статус:</strong> <?= htmlspecialchars($order_status) ?></p>
                 <p><strong>Дата создания:</strong> <?= htmlspecialchars($order['created_at']) ?></p>
                 <p><strong>Способ оплаты:</strong> <?= htmlspecialchars($payment_method) ?></p>
@@ -107,8 +107,8 @@ $payment_method = isset($payment_translation[$order['payment_method']]) ? $payme
                         <td><img src="images/<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['name']) ?>" class="product-image"></td>
                         <td><?= htmlspecialchars($item['name']) ?></td>
                         <td><?= htmlspecialchars($item['quantity']) ?></td>
-                        <td><?= htmlspecialchars($item['price']) ?> $</td>
-                        <td><?= htmlspecialchars($item['quantity'] * $item['price']) ?> $</td>
+                        <td><?= htmlspecialchars($item['price']) ?> $ / <?= htmlspecialchars(number_format($item['price_kzt'], 2, ',', ' ')) ?> ₸</td>
+                        <td><?= htmlspecialchars($item['total_price']) ?> $ / <?= htmlspecialchars(number_format($item['total_price_kzt'], 2, ',', ' ')) ?> ₸</td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

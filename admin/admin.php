@@ -8,12 +8,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 
 include '../dataBase/db.php';
 
-// Здесь вы можете добавить проверку прав доступа администратора
-// Например, проверка роли пользователя, если у вас есть система авторизации
-
-// Получаем общее количество товаров, категорий, заказов и пользователей
+// Получаем общее количество товаров, категорий, подкатегорий, заказов и пользователей
 $product_count = $pdo->query("SELECT COUNT(*) FROM products")->fetchColumn();
 $category_count = $pdo->query("SELECT COUNT(*) FROM categories")->fetchColumn();
+$subcategory_count = $pdo->query("SELECT COUNT(*) FROM subcategories")->fetchColumn(); // Подсчет подкатегорий
 $order_count = $pdo->query("SELECT COUNT(*) FROM orders")->fetchColumn();
 $user_count = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
 ?>
@@ -49,6 +47,15 @@ $user_count = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
                         <h5 class="card-title">Категории</h5>
                         <p class="card-text">Количество категорий: <?= $category_count ?></p>
                         <a href="admin_categories.php" class="btn btn-light">Управление категориями</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-info mb-3"> <!-- Добавляем новую карточку для подкатегорий -->
+                    <div class="card-body">
+                        <h5 class="card-title">Подкатегории</h5>
+                        <p class="card-text">Количество подкатегорий: <?= $subcategory_count ?></p>
+                        <a href="admin_subcategories.php" class="btn btn-light">Управление подкатегориями</a>
                     </div>
                 </div>
             </div>

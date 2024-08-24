@@ -33,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $description = htmlspecialchars($_POST['description']);
     $price = floatval($_POST['price']);
     $category_id = intval($_POST['category_id']);
+    $subcategory_id = intval($_POST['subcategory_id']);
     $stock_quantity = intval($_POST['stock_quantity']);
 
     // Проверяем, было ли загружено новое изображение
@@ -56,12 +57,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Обновляем данные товара в базе данных
     if (!isset($error)) {
-        $stmt = $pdo->prepare("UPDATE products SET name = :name, description = :description, price = :price, category_id = :category_id, stock_quantity = :stock_quantity, image = :image, updated_at = NOW() WHERE id = :id");
+        $stmt = $pdo->prepare("UPDATE products SET name = :name, description = :description, price = :price, category_id = :category_id, subcategory_id = :subcategory_id, stock_quantity = :stock_quantity, image = :image, updated_at = NOW() WHERE id = :id");
         $stmt->execute([
             'name' => $name,
             'description' => $description,
             'price' => $price,
             'category_id' => $category_id,
+            'subcategory_id' => $subcategory_id,
             'stock_quantity' => $stock_quantity,
             'image' => $image,
             'id' => $product_id
@@ -75,6 +77,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 // Получаем список категорий для выбора
 $categories = $pdo->query("SELECT * FROM categories")->fetchAll(PDO::FETCH_ASSOC);
+
+// Получаем список подкатегорий для выбранной категории
+$subcategories = [];
+if ($product['category_id']) {
+    $stmt = $pdo->prepare("SELECT * FROM subcategories WHERE category_id = :category_id");
+    $stmt->execute(['category_id' => $product['category_id']]);
+    $subcategories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 ?>
 
 <!DOCTYPE html>
@@ -85,6 +95,27 @@ $categories = $pdo->query("SELECT * FROM categories")->fetchAll(PDO::FETCH_ASSOC
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Редактирование товара - Магазин сантехники</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        function loadSubcategories(categoryId) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'get_edit_sub.php?category_id=' + categoryId, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    document.getElementById('subcategory_id').innerHTML = xhr.responseText;
+                }
+            };
+            xhr.send();
+        }
+
+        // Автоматически загружаем подкатегории при загрузке страницы, если выбрана категория
+        document.addEventListener("DOMContentLoaded", function() {
+            const categorySelect = document.getElementById('category_id');
+            if (categorySelect.value) {
+                loadSubcategories(categorySelect.value);
+            }
+        });
+    </script>
+
 </head>
 
 <body>
@@ -111,9 +142,19 @@ $categories = $pdo->query("SELECT * FROM categories")->fetchAll(PDO::FETCH_ASSOC
             </div>
             <div class="mb-3">
                 <label for="category_id" class="form-label">Категория</label>
-                <select class="form-control" id="category_id" name="category_id" required>
+                <select class="form-control" id="category_id" name="category_id" required onchange="loadSubcategories(this.value)">
+                    <option value="">Выберите категорию</option>
                     <?php foreach ($categories as $category): ?>
                         <option value="<?= $category['id'] ?>" <?= $category['id'] == $product['category_id'] ? 'selected' : '' ?>><?= htmlspecialchars($category['name']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="subcategory_id" class="form-label">Подкатегория</label>
+                <select class="form-control" id="subcategory_id" name="subcategory_id" required>
+                    <option value="">Выберите подкатегорию</option>
+                    <?php foreach ($subcategories as $subcategory): ?>
+                        <option value="<?= $subcategory['id'] ?>" <?= $subcategory['id'] == $product['subcategory_id'] ? 'selected' : '' ?>><?= htmlspecialchars($subcategory['name']) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>

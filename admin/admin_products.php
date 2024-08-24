@@ -21,8 +21,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
     exit();
 }
 
-// Получаем список всех товаров
-$products = $pdo->query("SELECT * FROM products")->fetchAll(PDO::FETCH_ASSOC);
+// Получаем список всех товаров с категориями и подкатегориями
+$products = $pdo->query("
+    SELECT products.*, categories.name as category_name, subcategories.name as subcategory_name 
+    FROM products 
+    LEFT JOIN categories ON products.category_id = categories.id 
+    LEFT JOIN subcategories ON products.subcategory_id = subcategories.id
+")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -49,6 +54,7 @@ $products = $pdo->query("SELECT * FROM products")->fetchAll(PDO::FETCH_ASSOC);
                     <th>Описание</th>
                     <th>Цена</th>
                     <th>Категория</th>
+                    <th>Подкатегория</th>
                     <th>Действия</th>
                 </tr>
             </thead>
@@ -59,7 +65,8 @@ $products = $pdo->query("SELECT * FROM products")->fetchAll(PDO::FETCH_ASSOC);
                         <td><?= htmlspecialchars($product['name']) ?></td>
                         <td><?= htmlspecialchars($product['description']) ?></td>
                         <td><?= htmlspecialchars($product['price']) ?> $</td>
-                        <td><?= htmlspecialchars($product['category_id']) ?></td>
+                        <td><?= htmlspecialchars($product['category_name']) ?></td>
+                        <td><?= htmlspecialchars($product['subcategory_name']) ?></td>
                         <td>
                             <a href="admin_edit_product.php?id=<?= $product['id'] ?>" class="btn btn-primary btn-sm">Редактировать</a>
                             <a href="admin_products.php?action=delete&id=<?= $product['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Вы уверены, что хотите удалить этот товар?');">Удалить</a>

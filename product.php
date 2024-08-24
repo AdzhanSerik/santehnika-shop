@@ -10,8 +10,14 @@ if ($product_id === 0) {
     exit();
 }
 
-// Получаем информацию о товаре из базы данных
-$stmt = $pdo->prepare("SELECT * FROM products WHERE id = :id");
+// Получаем информацию о товаре, включая его категорию и подкатегорию, из базы данных
+$stmt = $pdo->prepare("
+    SELECT products.*, categories.name AS category_name, subcategories.name AS subcategory_name 
+    FROM products 
+    LEFT JOIN categories ON products.category_id = categories.id 
+    LEFT JOIN subcategories ON products.subcategory_id = subcategories.id 
+    WHERE products.id = :id
+");
 $stmt->execute(['id' => $product_id]);
 $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -109,6 +115,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['quantity'])) {
                     <h1 class="display-4"><?= htmlspecialchars($product['name']) ?></h1>
                     <p class="lead"><?= htmlspecialchars($product['description']) ?></p>
                     <p class="h4"><strong>Цена: <?= htmlspecialchars($product['price']) ?> $</strong></p>
+                    <p class="h5"><strong>Категория:</strong> <?= htmlspecialchars($product['category_name']) ?></p>
+                    <p class="h5"><strong>Подкатегория:</strong> <?= htmlspecialchars($product['subcategory_name']) ?></p>
 
                     <?php if (isset($error)): ?>
                         <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
