@@ -117,33 +117,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             flex-direction: column;
             min-height: 100vh;
         }
+
         .container {
             flex: 1;
         }
+
         .btn {
             border-radius: 50px;
         }
+
         .form-label {
             font-weight: bold;
         }
-        .form-control, .form-select {
+
+        .form-control,
+        .form-select {
             border-radius: 50px;
         }
-        .form-control::placeholder, .form-select::placeholder {
+
+        .form-control::placeholder,
+        .form-select::placeholder {
             font-style: italic;
         }
+
         .input-group-text {
             border-radius: 50px 0 0 50px;
         }
+
         .form-icon {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
             left: 10px;
         }
+
         .input-group {
             position: relative;
         }
+
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -154,7 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php include 'header.php'; ?>
     <div class="container mt-5">
         <h1 class="mb-4">Оформление заказа</h1>
-        <form method="POST">
+        <form method="POST" onsubmit="return validateForm()">
             <div class="mb-3">
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-user"></i></span>
@@ -197,6 +208,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
     <?php include 'footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function validateForm() {
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                alert('Введите корректный email.');
+                return false;
+            }
+            
+            const phonePattern = /^\d{10,15}$/;
+            if (!phonePattern.test(phone)) {
+                alert('Введите корректный номер телефона от 10 до 15 цифр.');
+                return false;
+            }
+
+            return true; 
+        }
+    </script>
 </body>
 
 </html>
