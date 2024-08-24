@@ -205,6 +205,25 @@ $username = $is_logged_in ? $_SESSION['username'] : '';
         .btn-danger:hover {
             background-color: #c82333;
         }
+        /* Стили для цены */
+.card-text.price {
+    font-size: 1.1rem; /* Чуть больший размер шрифта */
+    font-weight: 600; /* Полужирный шрифт */
+    color: #333; /* Основной цвет текста */
+    margin-bottom: 12px; /* Отступ снизу */
+}
+
+/* Стили для цены в долларах */
+.card-text .price-usd {
+    color: #28a745; /* Зеленый цвет для USD */
+    margin-right: 5px; /* Отступ справа */
+}
+
+/* Стили для цены в тенге */
+.card-text .price-kzt {
+    color: #007bff; /* Синий цвет для KZT */
+}
+
     </style>
 </head>
 
@@ -273,7 +292,11 @@ $username = $is_logged_in ? $_SESSION['username'] : '';
                                     <div class="card-body">
                                         <h5 class="card-title"><?= htmlspecialchars($product['name']) ?></h5>
                                         <p class="card-text description"><?= htmlspecialchars($product['description']) ?></p>
-                                        <p class="card-text"><strong><?= htmlspecialchars($product['price']) ?> $ / <?= number_format($price_in_kzt, 2, ',', ' ') ?> ₸</strong></p>
+                                        <p class="card-text price">
+    <strong class="price-usd"><?= htmlspecialchars($product['price']) ?> $</strong> / 
+    <strong class="price-kzt"><?= number_format($price_in_kzt, 2, ',', ' ') ?> ₸</strong>
+</p>
+
                                         <p class="card-text"><strong>Категория:</strong> <?= htmlspecialchars($product['category_name']) ?></p>
                                         <p class="card-text"><strong>Подкатегория:</strong> <?= htmlspecialchars($product['subcategory_name']) ?></p>
                                         <a href="product.php?id=<?= $product['id'] ?>" class="btn btn-primary">Посмотреть</a>
