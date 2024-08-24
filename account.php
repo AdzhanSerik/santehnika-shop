@@ -36,14 +36,64 @@ $status_translation = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Личный кабинет - Магазин сантехники</title>
+    <title>Личный кабинет - Опто Маркет</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .content {
+            flex: 1;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn {
+            border-radius: 50px;
+            font-size: 14px;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+        table {
+            margin-top: 20px;
+        }
+        .table th, .table td {
+            text-align: center;
+        }
+        .header-margin {
+            margin-bottom: 20px;
+        }
+        @media (max-width: 576px) {
+            .btn {
+                font-size: 16px;
+            }
+            .table {
+                font-size: 12px;
+            }
+        }
+    </style>
 </head>
 
 <body>
     <?php include 'header.php'; ?>
-    <div class="container mt-5">
-        <h1>Личный кабинет</h1>
+    <div class="content container mt-5">
+        <h1 class="header-margin">Личный кабинет</h1>
 
         <div class="card mb-4">
             <div class="card-header">
@@ -58,7 +108,7 @@ $status_translation = [
         </div>
 
         <h3>История заказов</h3>
-        <table class="table table-bordered">
+        <table class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th>ID заказа</th>
@@ -82,6 +132,9 @@ $status_translation = [
                 <?php endforeach; ?>
             </tbody>
         </table>
+    </div>
+    <div class="footer">
+        <?php include 'footer.php'; ?>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

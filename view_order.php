@@ -62,17 +62,47 @@ $payment_method = isset($payment_translation[$order['payment_method']]) ? $payme
     <title>Просмотр заказа - Магазин сантехники</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        .container-view-order {
+            max-width: 1200px;
+            margin: auto
+        }
+        .card {
+            border-radius: 0.5rem;
+            border: none;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            font-weight: 600;
+        }
+        .card-body {
+            background-color: #ffffff;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
         .product-image {
-            max-width: 100px;
+            max-width: 80px;
             height: auto;
+        }
+        @media (max-width: 768px) {
+            .table th, .table td {
+                white-space: nowrap;
+            }
         }
     </style>
 </head>
 
 <body>
     <?php include 'header.php'; ?>
-    <div class="container mt-5">
-        <h1>Просмотр заказа #<?= $order['id'] ?></h1>
+    <div class="container-view-order mt-5 mb-5">
+        <h1 class="mb-4">Просмотр заказа #<?= $order['id'] ?></h1>
         <div class="card mb-4">
             <div class="card-header">
                 Информация о заказе
@@ -91,31 +121,36 @@ $payment_method = isset($payment_translation[$order['payment_method']]) ? $payme
         </div>
 
         <h3>Товары в заказе</h3>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Изображение</th>
-                    <th>Название товара</th>
-                    <th>Количество</th>
-                    <th>Цена за единицу</th>
-                    <th>Общая стоимость</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($order_items as $item): ?>
+        <div class="table-wrapper">
+            <table class="table table-bordered">
+                <thead>
                     <tr>
-                        <td><img src="images/<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['name']) ?>" class="product-image"></td>
-                        <td><?= htmlspecialchars($item['name']) ?></td>
-                        <td><?= htmlspecialchars($item['quantity']) ?></td>
-                        <td><?= htmlspecialchars($item['price']) ?> $</td>
-                        <td><?= htmlspecialchars($item['quantity'] * $item['price']) ?> $</td>
+                        <th>Изображение</th>
+                        <th>Название товара</th>
+                        <th>Количество</th>
+                        <th>Цена за единицу</th>
+                        <th>Общая стоимость</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($order_items as $item): ?>
+                        <tr>
+                            <td><img src="images/<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['name']) ?>" class="product-image"></td>
+                            <td><?= htmlspecialchars($item['name']) ?></td>
+                            <td><?= htmlspecialchars($item['quantity']) ?></td>
+                            <td><?= htmlspecialchars($item['price']) ?> $</td>
+                            <td><?= htmlspecialchars($item['quantity'] * $item['price']) ?> $</td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
 
         <a href="account.php" class="btn btn-secondary mt-4">Вернуться в личный кабинет</a>
     </div>
+    <footer>
+        <?php include 'footer.php'; ?>
+    </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

@@ -36,32 +36,79 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход - Магазин сантехники</title>
+    <title>Вход - Опто Маркет</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            padding-bottom: 80px; /* Оставляем место для футера */
+        }
+        .container-login {
+            max-width: 400px;
+            margin: 50px auto;
+        }
+        .form-control {
+            border-radius: 50px;
+            padding-left: 45px;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        .form-group {
+            position: relative;
+        }
+        .input-group-text {
+            border-radius: 50px;
+        }
+        .form-group .icon {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        .btn {
+            border-radius: 50px;
+        }
+        .alert {
+            margin-top: 20px;
+        }
+        .text-center {
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
     <?php include 'header.php'; ?>
-    <div class="container mt-5">
-        <h1>Вход</h1>
+    <div class="container-login">
+        <h1 class="text-center mb-4">Вход</h1>
 
         <?php if (isset($error)): ?>
             <div class="alert alert-danger"><?= $error ?></div>
         <?php endif; ?>
 
         <form method="POST">
-            <div class="mb-3">
+            <div class="form-group mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required>
+                <div class="input-group">
+                    <span class="input-group-text icon"><i class="fas fa-envelope"></i></span>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Введите ваш email" required>
+                </div>
             </div>
-            <div class="mb-3">
+            <div class="form-group mb-4">
                 <label for="password" class="form-label">Пароль</label>
-                <input type="password" class="form-control" id="password" name="password" required>
+                <div class="input-group">
+                    <span class="input-group-text icon"><i class="fas fa-lock"></i></span>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Введите ваш пароль" required>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">Войти</button>
+            <button type="submit" class="btn btn-primary w-100">Войти</button>
         </form>
 
-        <p class="mt-3">Нет аккаунта? <a href="register.php">Зарегистрироваться</a></p>
+        <p class="text-center mt-3">Нет аккаунта? <a href="register.php">Зарегистрироваться</a></p>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

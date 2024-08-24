@@ -42,8 +42,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Редактирование профиля - Магазин сантехники</title>
+    <title>Редактирование профиля - Опто Маркет</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            flex: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn {
+            border-radius: 50px;
+            font-size: 14px;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+    </style>
 </head>
 
 <body>
@@ -61,6 +88,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <button type="submit" class="btn btn-primary">Сохранить изменения</button>
         </form>
+    </div>
+    <div class="footer">
+        <?php include 'footer.php'; ?>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

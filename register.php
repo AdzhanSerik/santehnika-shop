@@ -43,40 +43,93 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Регистрация - Магазин сантехники</title>
+    <title>Регистрация - Опто Маркет</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            padding-bottom: 80px; /* Оставляем место для футера */
+        }
+        .container-register {
+            max-width: 400px;
+            margin: 50px auto;
+        }
+        .form-control {
+            border-radius: 50px;
+            padding-left: 45px;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        .form-group {
+            position: relative;
+        }
+        .input-group-text {
+            border-radius: 50px;
+        }
+        .form-group .icon {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        .btn {
+            border-radius: 50px;
+        }
+        .alert {
+            margin-top: 20px;
+        }
+        .text-center {
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
     <?php include 'header.php'; ?>
-    <div class="container mt-5">
-        <h1>Регистрация</h1>
+    <div class="container-register">
+        <h1 class="text-center mb-4">Регистрация</h1>
 
         <?php if (isset($error)): ?>
             <div class="alert alert-danger"><?= $error ?></div>
         <?php endif; ?>
 
         <form method="POST">
-            <div class="mb-3">
+            <div class="form-group mb-3">
                 <label for="username" class="form-label">Имя пользователя</label>
-                <input type="text" class="form-control" id="username" name="username" required>
+                <div class="input-group">
+                    <span class="input-group-text icon"><i class="fas fa-user"></i></span>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Введите ваше имя" required>
+                </div>
             </div>
-            <div class="mb-3">
+            <div class="form-group mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required>
+                <div class="input-group">
+                    <span class="input-group-text icon"><i class="fas fa-envelope"></i></span>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Введите ваш email" required>
+                </div>
             </div>
-            <div class="mb-3">
+            <div class="form-group mb-3">
                 <label for="password" class="form-label">Пароль</label>
-                <input type="password" class="form-control" id="password" name="password" required>
+                <div class="input-group">
+                    <span class="input-group-text icon"><i class="fas fa-lock"></i></span>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Введите ваш пароль" required>
+                </div>
             </div>
-            <div class="mb-3">
+            <div class="form-group mb-4">
                 <label for="confirm_password" class="form-label">Подтвердите пароль</label>
-                <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                <div class="input-group">
+                    <span class="input-group-text icon"><i class="fas fa-lock"></i></span>
+                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Повторите ваш пароль" required>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+            <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
         </form>
 
-        <p class="mt-3">Уже есть аккаунт? <a href="login.php">Войти</a></p>
+        <p class="text-center mt-3">Уже есть аккаунт? <a href="login.php">Войти</a></p>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
