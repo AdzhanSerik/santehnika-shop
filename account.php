@@ -36,8 +36,59 @@ $status_translation = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Личный кабинет - Магазин сантехники</title>
+    <title>Личный кабинет - Опто Маркет</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            flex: 1;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+            font-size: 1.5rem;
+            border-radius: 10px 10px 0 0;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            border-radius: 50px;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+        .table thead th {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .footer {
+            background-color: #007bff;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+        .footer a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 
 <body>
@@ -58,31 +109,35 @@ $status_translation = [
         </div>
 
         <h3>История заказов</h3>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID заказа</th>
-                    <th>Общая сумма</th>
-                    <th>Статус</th>
-                    <th>Дата создания</th>
-                    <th>Действия</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($orders as $order): ?>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
                     <tr>
-                        <td><?= htmlspecialchars($order['id']) ?></td>
-                        <td><?= htmlspecialchars($order['total_amount']) ?> $</td>
-                        <td><?= htmlspecialchars($status_translation[$order['status']]) ?></td>
-                        <td><?= htmlspecialchars($order['created_at']) ?></td>
-                        <td>
-                            <a href="view_order.php?id=<?= $order['id'] ?>" class="btn btn-info btn-sm">Просмотр</a>
-                        </td>
+                        <th>ID заказа</th>
+                        <th>Общая сумма</th>
+                        <th>Статус</th>
+                        <th>Дата создания</th>
+                        <th>Действия</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($orders as $order): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($order['id']) ?></td>
+                            <td><?= htmlspecialchars($order['total_amount']) ?> $</td>
+                            <td><?= htmlspecialchars($status_translation[$order['status']]) ?></td>
+                            <td><?= htmlspecialchars($order['created_at']) ?></td>
+                            <td>
+                                <a href="view_order.php?id=<?= $order['id'] ?>" class="btn btn-info btn-sm text-white">Просмотр</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
+
+    <?php include 'footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

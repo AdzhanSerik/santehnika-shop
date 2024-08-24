@@ -106,45 +106,95 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Оформление заказа - Магазин сантехники</title>
+    <title>Оформление заказа - Опто Маркет</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            flex: 1;
+        }
+        .btn {
+            border-radius: 50px;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        .form-control, .form-select {
+            border-radius: 50px;
+        }
+        .form-control::placeholder, .form-select::placeholder {
+            font-style: italic;
+        }
+        .input-group-text {
+            border-radius: 50px 0 0 50px;
+        }
+        .form-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 10px;
+        }
+        .input-group {
+            position: relative;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+    </style>
 </head>
 
 <body>
     <?php include 'header.php'; ?>
     <div class="container mt-5">
-        <h1>Оформление заказа</h1>
+        <h1 class="mb-4">Оформление заказа</h1>
         <form method="POST">
             <div class="mb-3">
-                <label for="name" class="form-label">Имя</label>
-                <input type="text" class="form-control" id="name" name="name" value="<?= htmlspecialchars($username) ?>" required>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Имя" required>
+                </div>
             </div>
             <div class="mb-3">
-                <label for="address" class="form-label">Адрес доставки</label>
-                <input type="text" class="form-control" id="address" name="address" required>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-home"></i></span>
+                    <input type="text" class="form-control" id="address" name="address" placeholder="Адрес доставки" required>
+                </div>
             </div>
             <div class="mb-3">
-                <label for="city" class="form-label">Город</label>
-                <input type="text" class="form-control" id="city" name="city" required>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-city"></i></span>
+                    <input type="text" class="form-control" id="city" name="city" placeholder="Город" required>
+                </div>
             </div>
             <div class="mb-3">
-                <label for="email" class="form-label">Электронная почта</label>
-                <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($email) ?>" required>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                    <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($email) ?>" placeholder="Электронная почта" required>
+                </div>
             </div>
             <div class="mb-3">
-                <label for="phone" class="form-label">Телефон</label>
-                <input type="tel" class="form-control" id="phone" name="phone" required>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="Телефон" required>
+                </div>
             </div>
             <div class="mb-3">
                 <label for="payment_method" class="form-label">Метод оплаты</label>
                 <select class="form-control" id="payment_method" name="payment_method" required>
-                    <option value="cash">Наличными при получении</option>
+                    <option value="cash">Наличными при получении (г. Алматы)</option>
                     <option value="qr">Оплата через QR-код</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-success">Подтвердить заказ</button>
         </form>
     </div>
+    <?php include 'footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

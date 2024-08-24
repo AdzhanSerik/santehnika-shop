@@ -60,28 +60,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['quantity'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($product['name']) ?> - Магазин сантехники</title>
+    <title><?= htmlspecialchars($product['name']) ?> - Опто Маркет</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
-        .product-image-main {
-            max-width: 100%;
+        .carousel-inner img {
+            width: 100%;
             height: auto;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .product-image-thumbnail {
-            max-width: 100px;
-            height: auto;
-            margin: 10px;
-            cursor: pointer;
-            border: 2px solid #ddd;
-            transition: border-color 0.3s;
-        }
-
-        .product-image-thumbnail:hover {
-            border-color: #007bff;
         }
 
         .product-details {
@@ -90,30 +75,67 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['quantity'])) {
             border-radius: 5px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
+        .product-description {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .quantity-icon {
+            font-size: 1.5rem;
+            vertical-align: middle;
+        }
+
+        .btn-icon {
+            font-size: 1.5rem;
+            vertical-align: middle;
+        }
+        
+        .btn-primary {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        
+        .btn-primary:hover {
+            background-color: #004494;
+            border-color: #003d7a;
+        }
     </style>
 </head>
 
 <body>
     <?php include 'header.php'; ?>
+
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-6">
-                <img src="images/<?= htmlspecialchars($product['image']) ?>" class="product-image-main img-fluid" id="mainImage" alt="<?= htmlspecialchars($product['name']) ?>">
-
-                <div>
-                    <!-- Основное изображение как миниатюра -->
-                    <img src="images/<?= htmlspecialchars($product['image']) ?>" class="product-image-thumbnail img-fluid" onclick="document.getElementById('mainImage').src=this.src" alt="<?= htmlspecialchars($product['name']) ?>">
-
-                    <!-- Дополнительные изображения как миниатюры -->
-                    <?php foreach ($additional_images as $image): ?>
-                        <img src="images/<?= htmlspecialchars($image['image_url']) ?>" class="product-image-thumbnail img-fluid" onclick="document.getElementById('mainImage').src=this.src" alt="<?= htmlspecialchars($product['name']) ?>">
-                    <?php endforeach; ?>
+                <!-- Карусель изображений -->
+                <div id="productCarousel" class="carousel slide">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="images/<?= htmlspecialchars($product['image']) ?>" class="d-block w-100" alt="<?= htmlspecialchars($product['name']) ?>">
+                        </div>
+                        <?php foreach ($additional_images as $image): ?>
+                            <div class="carousel-item">
+                                <img src="images/<?= htmlspecialchars($image['image_url']) ?>" class="d-block w-100" alt="<?= htmlspecialchars($product['name']) ?>">
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Предыдущий</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Следующий</span>
+                    </button>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="product-details">
                     <h1 class="display-4"><?= htmlspecialchars($product['name']) ?></h1>
-                    <p class="lead"><?= htmlspecialchars($product['description']) ?></p>
+                    <p class="lead product-description"><?= htmlspecialchars($product['description']) ?></p>
                     <p class="h4"><strong>Цена: <?= htmlspecialchars($product['price']) ?> $</strong></p>
                     <p class="h5"><strong>Категория:</strong> <?= htmlspecialchars($product['category_name']) ?></p>
                     <p class="h5"><strong>Подкатегория:</strong> <?= htmlspecialchars($product['subcategory_name']) ?></p>
@@ -124,17 +146,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['quantity'])) {
 
                     <form method="POST" class="mt-4">
                         <div class="mb-3">
-                            <label for="quantity" class="form-label">Количество</label>
+                            <label for="quantity" class="form-label">
+                                <i class="bi bi-box"></i> Количество
+                            </label>
                             <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" required>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-lg">Добавить в корзину</button>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-cart-plus"></i> Добавить в корзину
+                        </button>
                     </form>
 
-                    <a href="index.php" class="btn btn-secondary btn-lg mt-3">Вернуться к покупкам</a>
+                    <a href="index.php" class="btn btn-secondary btn-lg mt-3">
+                        <i class="bi bi-arrow-left"></i> Вернуться к покупкам
+                    </a>
                 </div>
             </div>
         </div>
     </div>
+    <div>
+    <?php include 'footer.php'; ?>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

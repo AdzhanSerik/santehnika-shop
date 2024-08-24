@@ -54,51 +54,129 @@ $total_in_kzt = $total * $exchange_rate;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Корзина - Магазин сантехники</title>
+    <title>Корзина - Опто Маркет</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            flex: 1;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .btn {
+            border-radius: 50px;
+        }
+
+        .table th, .table td {
+            text-align: center;
+        }
+
+        .table th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+
+        .table td {
+            vertical-align: middle;
+        }
+
+        .table .btn-danger {
+            background-color: #dc3545;
+            border: none;
+        }
+
+        .table .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border: none;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border: none;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .footer {
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
     <?php include 'header.php'; ?>
     <div class="container mt-5">
-        <h1>Корзина</h1>
+        <h1 class="mb-4">Корзина</h1>
         <?php if (empty($_SESSION['cart'])): ?>
             <p>Ваша корзина пуста.</p>
             <a href="index.php" class="btn btn-primary">Вернуться к покупкам</a>
         <?php else: ?>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Товар</th>
-                        <th>Цена</th>
-                        <th>Количество</th>
-                        <th>Итого</th>
-                        <th>Действия</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($_SESSION['cart'] as $id => $item): ?>
-                        <?php
-                        // Конвертация суммы для каждого товара в тенге
-                        $item_total_in_kzt = $item['price'] * $item['quantity'] * $exchange_rate;
-                        ?>
+            <div class="table-container">
+                <table class="table table-bordered table-striped">
+                    <thead>
                         <tr>
-                            <td><?= htmlspecialchars($item['name']) ?></td>
-                            <td><?= htmlspecialchars($item['price']) ?> $ / <?= number_format($item['price'] * $exchange_rate, 2, ',', ' ') ?> ₸</td>
-                            <td><?= htmlspecialchars($item['quantity']) ?></td>
-                            <td><?= htmlspecialchars($item['price'] * $item['quantity']) ?> $ / <?= number_format($item_total_in_kzt, 2, ',', ' ') ?> ₸</td>
-                            <td>
-                                <a href="cart.php?action=remove&id=<?= $id ?>" class="btn btn-danger btn-sm">Удалить</a>
-                            </td>
+                            <th>Товар</th>
+                            <th>Цена</th>
+                            <th>Количество</th>
+                            <th>Итого</th>
+                            <th>Действия</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-            <p><strong>Общая сумма: <?= $total ?> $ / <?= number_format($total_in_kzt, 2, ',', ' ') ?> ₸</strong></p>
-            <a href="checkout.php" class="btn btn-success">Оформить заказ</a>
-            <a href="index.php" class="btn btn-warning">Продолжить покупки</a>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($_SESSION['cart'] as $id => $item): ?>
+                            <?php
+                            // Конвертация суммы для каждого товара в тенге
+                            $item_total_in_kzt = $item['price'] * $item['quantity'] * $exchange_rate;
+                            ?>
+                            <tr>
+                                <td><?= htmlspecialchars($item['name']) ?></td>
+                                <td><?= htmlspecialchars($item['price']) ?> $ / <?= number_format($item['price'] * $exchange_rate, 2, ',', ' ') ?> ₸</td>
+                                <td><?= htmlspecialchars($item['quantity']) ?></td>
+                                <td><?= htmlspecialchars($item['price'] * $item['quantity']) ?> $ / <?= number_format($item_total_in_kzt, 2, ',', ' ') ?> ₸</td>
+                                <td>
+                                    <a href="cart.php?action=remove&id=<?= $id ?>" class="btn btn-danger btn-sm">Удалить</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <p class="mt-4"><strong>Общая сумма: <?= number_format($total, 2, ',', ' ') ?> $ / <?= number_format($total_in_kzt, 2, ',', ' ') ?> ₸</strong></p>
+            <a href="checkout.php" class="btn btn-success btn-lg">Оформить заказ</a>
+            <a href="index.php" class="btn btn-warning btn-lg">Продолжить покупки</a>
         <?php endif; ?>
     </div>
+    <footer class="footer">
+        <?php include 'footer.php'; ?>
+    </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

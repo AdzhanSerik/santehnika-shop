@@ -43,17 +43,62 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Регистрация - Магазин сантехники</title>
+    <title>Регистрация - Опто Маркет</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa; /* Светлый фон для всего сайта */
+            font-family: 'Nunito', sans-serif;
+        }
+        .registration-container {
+            max-width: 450px;
+            margin: 5% auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .registration-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .registration-header h1 {
+            font-size: 2.5rem;
+            color: #343a40;
+        }
+        .btn-custom {
+            background-color: #007bff; /* Синий цвет для кнопки */
+            border-color: #007bff;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3; /* Темный синий для наведения */
+            border-color: #004085;
+        }
+        .btn-custom:focus, .btn-custom.focus {
+            box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5); /* Цвет тени при фокусе */
+        }
+        .alert-custom {
+            border-radius: 5px;
+            background-color: #f8d7da; /* Светло-красный фон для ошибки */
+            color: #721c24; /* Темно-красный текст */
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1rem;
+        }
+    </style>
 </head>
 
 <body>
     <?php include 'header.php'; ?>
-    <div class="container mt-5">
-        <h1>Регистрация</h1>
+    <div class="registration-container">
+        <div class="registration-header">
+            <h1>Регистрация</h1>
+        </div>
 
         <?php if (isset($error)): ?>
-            <div class="alert alert-danger"><?= $error ?></div>
+            <div class="alert alert-custom"><?= $error ?></div>
         <?php endif; ?>
 
         <form method="POST">
@@ -73,10 +118,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <label for="confirm_password" class="form-label">Подтвердите пароль</label>
                 <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
             </div>
-            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+            <button type="submit" class="btn btn-custom w-100" style='background-color:#007bff; color: white'>Зарегистрироваться</button>
         </form>
 
-        <p class="mt-3">Уже есть аккаунт? <a href="login.php">Войти</a></p>
+        <p class="mt-3 text-center">Уже есть аккаунт? <a href="login.php">Войти</a></p>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -59,12 +59,21 @@ $payment_method = isset($payment_translation[$order['payment_method']]) ? $payme
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Просмотр заказа - Магазин сантехники</title>
+    <title>Просмотр заказа - Опто Маркет</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .product-image {
             max-width: 100px;
             height: auto;
+        }
+        .scrollable-table {
+            overflow-x: auto;
+        }
+        @media (max-width: 768px) {
+            .scrollable-table {
+                -webkit-overflow-scrolling: touch;
+            }
         }
     </style>
 </head>
@@ -72,7 +81,7 @@ $payment_method = isset($payment_translation[$order['payment_method']]) ? $payme
 <body>
     <?php include 'header.php'; ?>
     <div class="container mt-5">
-        <h1>Просмотр заказа #<?= $order['id'] ?></h1>
+        <h1 class="mb-4">Просмотр заказа #<?= htmlspecialchars($order['id']) ?></h1>
         <div class="card mb-4">
             <div class="card-header">
                 Информация о заказе
@@ -90,32 +99,35 @@ $payment_method = isset($payment_translation[$order['payment_method']]) ? $payme
             </div>
         </div>
 
-        <h3>Товары в заказе</h3>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Изображение</th>
-                    <th>Название товара</th>
-                    <th>Количество</th>
-                    <th>Цена за единицу</th>
-                    <th>Общая стоимость</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($order_items as $item): ?>
+        <h3 class="mb-4">Товары в заказе</h3>
+        <div class="scrollable-table">
+            <table class="table table-bordered">
+                <thead>
                     <tr>
-                        <td><img src="images/<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['name']) ?>" class="product-image"></td>
-                        <td><?= htmlspecialchars($item['name']) ?></td>
-                        <td><?= htmlspecialchars($item['quantity']) ?></td>
-                        <td><?= htmlspecialchars($item['price']) ?> $ / <?= htmlspecialchars(number_format($item['price_kzt'], 2, ',', ' ')) ?> ₸</td>
-                        <td><?= htmlspecialchars($item['total_price']) ?> $ / <?= htmlspecialchars(number_format($item['total_price_kzt'], 2, ',', ' ')) ?> ₸</td>
+                        <th>Изображение</th>
+                        <th>Название товара</th>
+                        <th>Количество</th>
+                        <th>Цена за единицу</th>
+                        <th>Общая стоимость</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($order_items as $item): ?>
+                        <tr>
+                            <td><img src="images/<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['name']) ?>" class="product-image"></td>
+                            <td><?= htmlspecialchars($item['name']) ?></td>
+                            <td><?= htmlspecialchars($item['quantity']) ?></td>
+                            <td><?= htmlspecialchars($item['price']) ?> $ / <?= htmlspecialchars(number_format($item['price_kzt'], 2, ',', ' ')) ?> ₸</td>
+                            <td><?= htmlspecialchars($item['total_price']) ?> $ / <?= htmlspecialchars(number_format($item['total_price_kzt'], 2, ',', ' ')) ?> ₸</td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
 
         <a href="account.php" class="btn btn-secondary mt-4">Вернуться в личный кабинет</a>
     </div>
+    <?php include 'footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
