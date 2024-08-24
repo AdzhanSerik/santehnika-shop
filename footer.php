@@ -3,7 +3,7 @@
         <div class="row">
             <!-- Логотип -->
             <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
-                <img src="/logo.jpg" alt="Логотип" class="img-fluid" style="max-width: 150px;">
+                <img src="/logo.jpg" alt="Логотип" class="img-fluid" style="max-width: 170px;">
             </div>
 
             <!-- О нас -->

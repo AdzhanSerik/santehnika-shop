@@ -61,13 +61,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['quantity'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($product['name']) ?> - Опто Маркет</title>
+    <link rel="icon" href="/logo.jpg" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
+        
         .carousel-inner img {
-            width: 100%;
-            height: auto;
-        }
+    width: 100%;
+    height: 600px; /* Вы можете изменить это значение на подходящее для вас */
+    object-fit: cover; /* Это гарантирует, что изображение будет обрезано для заполнения области */
+}
 
         .product-details {
             background-color: #f8f9fa;
@@ -147,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['quantity'])) {
                     <form method="POST" class="mt-4">
                         <div class="mb-3">
                             <label for="quantity" class="form-label">
-                                <i class="bi bi-box"></i> Количество
+                                <i class="bi bi-box"></i> Количество:
                             </label>
                             <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" required>
                         </div>

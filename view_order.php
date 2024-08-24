@@ -60,6 +60,7 @@ $payment_method = isset($payment_translation[$order['payment_method']]) ? $payme
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Просмотр заказа - Опто Маркет</title>
+    <link rel="icon" href="/logo.jpg" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
