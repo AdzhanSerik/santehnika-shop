@@ -17,7 +17,7 @@ curl_close($ch);
 
 // Парсим ответ и получаем курс USD к KZT
 $response_data = json_decode($response, true);
-$exchange_rate = $response_data['conversion_rates']['KZT'] + 3.68; // Если API не сработал, используем запасной курс
+$exchange_rate = $response_data['conversion_rates']['KZT'] + 3.69; // Если API не сработал, используем запасной курс
 
 // Получаем список всех категорий
 $categories = $pdo->query("SELECT * FROM categories")->fetchAll(PDO::FETCH_ASSOC);
