@@ -47,45 +47,56 @@ $status_translation = [
             flex-direction: column;
             min-height: 100vh;
         }
+
         .container {
             flex: 1;
         }
+
         .card {
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 1.5rem;
         }
+
         .card-header {
             background-color: #007bff;
             color: #fff;
             font-size: 1.5rem;
             border-radius: 10px 10px 0 0;
         }
+
         .btn-primary {
             background-color: #007bff;
             border: none;
             border-radius: 50px;
         }
+
         .btn-primary:hover {
             background-color: #0056b3;
         }
-        .table th, .table td {
+
+        .table th,
+        .table td {
             vertical-align: middle;
         }
+
         .table thead th {
             background-color: #007bff;
             color: #fff;
         }
+
         .footer {
             background-color: #007bff;
             color: #fff;
             padding: 1rem;
             text-align: center;
         }
+
         .footer a {
             color: #fff;
             text-decoration: none;
         }
+
         .footer a:hover {
             text-decoration: underline;
         }
@@ -115,7 +126,8 @@ $status_translation = [
                 <thead>
                     <tr>
                         <th>ID заказа</th>
-                        <th>Общая сумма</th>
+                        <th>Общая сумма (USD)</th>
+                        <th>Общая сумма (KZT)</th>
                         <th>Статус</th>
                         <th>Дата создания</th>
                         <th>Действия</th>
@@ -126,6 +138,7 @@ $status_translation = [
                         <tr>
                             <td><?= htmlspecialchars($order['id']) ?></td>
                             <td><?= htmlspecialchars($order['total_amount']) ?> $</td>
+                            <td><?= htmlspecialchars(number_format($order['total_amount_kzt'], 2, ',', ' ')) ?> ₸</td>
                             <td><?= htmlspecialchars($status_translation[$order['status']]) ?></td>
                             <td><?= htmlspecialchars($order['created_at']) ?></td>
                             <td>

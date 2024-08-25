@@ -46,6 +46,21 @@ foreach ($_SESSION['cart'] as $item) {
 
 // Конвертация общей суммы в тенге
 $total_in_kzt = $total * $exchange_rate;
+
+// Определение стоимости доставки
+$delivery_fee_kzt = 0;
+
+if ($total_in_kzt > 0 && $total_in_kzt < 200000) {
+    $delivery_fee_kzt = 3000;
+} elseif ($total_in_kzt >= 200000 && $total_in_kzt < 400000) {
+    $delivery_fee_kzt = 2000;
+} elseif ($total_in_kzt >= 500000) {
+    $delivery_fee_kzt = 0; // Бесплатная доставка
+}
+
+// Общая сумма с учетом доставки
+$grand_total_kzt = $total_in_kzt + $delivery_fee_kzt;
+
 ?>
 
 <!DOCTYPE html>
@@ -58,7 +73,8 @@ $total_in_kzt = $total * $exchange_rate;
     <link rel="icon" href="/logo.jpg" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        html, body {
+        html,
+        body {
             height: 100%;
             margin: 0;
         }
@@ -85,7 +101,8 @@ $total_in_kzt = $total * $exchange_rate;
             border-radius: 50px;
         }
 
-        .table th, .table td {
+        .table th,
+        .table td {
             text-align: center;
         }
 
@@ -171,6 +188,9 @@ $total_in_kzt = $total * $exchange_rate;
                 </table>
             </div>
             <p class="mt-4"><strong>Общая сумма: <?= number_format($total, 2, ',', ' ') ?> $ / <?= number_format($total_in_kzt, 2, ',', ' ') ?> ₸</strong></p>
+            <p><strong>Стоимость доставки: <?= number_format($delivery_fee_kzt, 2, ',', ' ') ?> ₸</strong></p>
+            <p><strong>Итоговая сумма: <?= number_format($grand_total_kzt, 2, ',', ' ') ?> ₸</strong></p>
+            <p class="text-muted">* Условия доставки: 0-200,000 тг. - 3000 тг, 200,000-400,000 тг - 2000 тг, от 500,000 тг - бесплатно.</p>
             <a href="checkout.php" class="btn btn-success btn-lg">Оформить заказ</a>
             <a href="index.php" class="btn btn-warning btn-lg">Продолжить покупки</a>
         <?php endif; ?>

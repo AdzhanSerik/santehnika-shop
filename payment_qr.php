@@ -22,7 +22,6 @@ if (!$order) {
 
 // Генерация QR-кода (это пример, нужно использовать библиотеку для генерации QR-кода, например, PHP QR Code)
 $qr_code_url = "https://example.com/generate_qr.php?amount=" . $order['total_amount'] . "&order_id=" . $order_id;
-
 ?>
 
 <!DOCTYPE html>
@@ -103,7 +102,7 @@ $qr_code_url = "https://example.com/generate_qr.php?amount=" . $order['total_amo
             </div>
             <div class="card-body">
                 <h5 class="card-title">Сумма к оплате</h5>
-                <p class="card-text"><strong><?= $order['total_amount'] ?> $</strong></p>
+                <p class="card-text"><strong><?= $order['total_amount'] ?> $ / <?= number_format($order['total_amount_kzt'], 2, ',', ' ') ?> ₸</strong></p>
                 <p class="card-text">Сканируйте QR-код для оплаты:</p>
                 <img src="/qr.png" alt="QR-код для оплаты" class="img-fluid mb-4">
                 <a href="account.php" class="btn btn-primary btn-lg">Я оплатил</a>
