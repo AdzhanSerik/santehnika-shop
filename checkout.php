@@ -236,6 +236,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .form-group {
             margin-bottom: 1.5rem;
         }
+        /* CSS для кнопки OK в SweetAlert2 */
+.swal2-confirm.custom-button {
+    background-color: #007bff !important; /* Синий цвет */
+    color: white !important; /* Белый цвет текста */
+    padding: 10px 20px !important; /* Увеличенная ширина */
+    border: none !important; /* Без границ */
+    border-radius: 5px !important; /* Закругленные углы */
+}
+
     </style>
 </head>
 
@@ -297,6 +306,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 Swal.fire({
                     icon: "error",
                     title: "Введите корректный email.",
+                    customClass: {
+        confirmButton: 'custom-button' // Применяем созданный CSS класс 
+    }
                 });
                 return false;
             }
@@ -308,6 +320,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     icon: "error",
                     title: "Неверный формат номера телефона",
                     text: "Введите корректный номер телефона от 10 до 15 цифр.",
+                    customClass: {
+        confirmButton: 'custom-button' // Применяем созданный CSS класс
+    },
                 });
                 return false;
             }

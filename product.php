@@ -97,10 +97,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['quantity'])) {
     color: #007bff; /* Синий цвет для KZT */
 }
 
-        .carousel-inner img {
+.carousel-inner img {
     width: 100%;
-    height: 600px; /* Вы можете изменить это значение на подходящее для вас */
-    object-fit: cover; /* Это гарантирует, что изображение будет обрезано для заполнения области */
+    height: 600px; /* Размер для больших экранов */
+    object-fit: cover;
+}
+
+/* Медиазапрос для уменьшения размера изображения на мобильных устройствах */
+@media (max-width: 768px) {
+    .carousel-inner img {
+        height: 300px; /* Меньший размер для мобильных устройств */
+    }
 }
 
         .product-details {
