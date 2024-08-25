@@ -38,6 +38,11 @@ $username = $is_logged_in ? $_SESSION['username'] : '';
         .navbar-toggler-icon {
             background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255, 255, 255, 0.5%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
         }
+        @media (max-width: 767.98px) {
+        .input-group {
+            margin-top: 1rem; /* Добавляет отступ сверху для навигации на мобильных устройствах */
+        }
+    }
     </style>
 </head>
 <body>
