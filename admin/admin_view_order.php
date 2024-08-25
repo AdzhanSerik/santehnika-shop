@@ -32,7 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'id' => $order_id
     ]);
 
-    // Обновляем информацию о заказе после изменения статуса
+    // Устанавливаем сообщение об успешном обновлении статуса
+    $_SESSION['status_updated'] = "Статус заказа #$order_id был успешно обновлен.";
+
+    // Перенаправляем обратно на страницу просмотра заказа, чтобы избежать повторного отправки формы
     header("Location: admin_view_order.php?id=$order_id");
     exit();
 }
@@ -51,7 +54,6 @@ if (!$order) {
 $stmt = $pdo->prepare("SELECT order_items.*, products.name FROM order_items JOIN products ON order_items.product_id = products.id WHERE order_items.order_id = :order_id");
 $stmt->execute(['order_id' => $order_id]);
 $order_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 
 $payment_translation = [
     'cash' => 'Наличными при получении',
@@ -75,6 +77,16 @@ $payment_method = isset($payment_translation[$order['payment_method']]) ? $payme
     <?php include 'header.php'; ?>
     <div class="container mt-5">
         <h1>Просмотр заказа #<?= $order['id'] ?></h1>
+
+        <!-- Уведомление об успешном обновлении статуса -->
+        <?php if (isset($_SESSION['status_updated'])): ?>
+            <div class="alert alert-success">
+                <?= $_SESSION['status_updated'] ?>
+            </div>
+            <?php unset($_SESSION['status_updated']); // Удаляем сообщение из сессии после отображения 
+            ?>
+        <?php endif; ?>
+
         <div class="card mb-4">
             <div class="card-header">
                 Информация о заказе
@@ -121,7 +133,6 @@ $payment_method = isset($payment_translation[$order['payment_method']]) ? $payme
                         <td><?= htmlspecialchars($item['quantity']) ?></td>
                         <td><?= htmlspecialchars($item['price']) ?> $ / <?= htmlspecialchars(number_format($item['price_kzt'], 2, ',', ' ')) ?> ₸</td>
                         <td><?= htmlspecialchars($item['quantity'] * $item['price']) ?> $</td>
-                        
                     </tr>
                 <?php endforeach; ?>
             </tbody>

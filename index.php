@@ -26,6 +26,9 @@ $categories = $pdo->query("SELECT * FROM categories")->fetchAll(PDO::FETCH_ASSOC
 $search_query = '';
 $category_filter = '';
 $subcategory_filter = '';
+$items_per_page = 9;
+$current_page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+$offset = ($current_page - 1) * $items_per_page;
 
 // Проверка на наличие поискового запроса
 if (isset($_GET['search'])) {
@@ -66,7 +69,8 @@ if ($subcategory_filter !== '') {
     $query .= " AND products.subcategory_id = :subcategory_id";
 }
 
-// Подготавливаем SQL-запрос
+$query .= " LIMIT :offset, :items_per_page";
+
 $stmt = $pdo->prepare($query);
 
 // Привязываем параметры к запросу
@@ -79,10 +83,47 @@ if ($category_filter !== '') {
 if ($subcategory_filter !== '') {
     $stmt->bindValue(':subcategory_id', $subcategory_filter, PDO::PARAM_INT);
 }
-
-// Выполняем запрос и получаем результат
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+$stmt->bindValue(':items_per_page', $items_per_page, PDO::PARAM_INT);
 $stmt->execute();
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Получаем общее количество товаров для пагинации
+$count_query = "
+    SELECT COUNT(*) 
+    FROM products 
+    LEFT JOIN categories ON products.category_id = categories.id 
+    LEFT JOIN subcategories ON products.subcategory_id = subcategories.id 
+    WHERE 1=1
+";
+
+if ($search_query !== '') {
+    $count_query .= " AND (products.name LIKE :search_query OR products.description LIKE :search_query OR categories.name LIKE :search_query OR subcategories.name LIKE :search_query)";
+}
+
+if ($category_filter !== '') {
+    $count_query .= " AND products.category_id = :category_id";
+}
+
+if ($subcategory_filter !== '') {
+    $count_query .= " AND products.subcategory_id = :subcategory_id";
+}
+
+$count_stmt = $pdo->prepare($count_query);
+
+if ($search_query !== '') {
+    $count_stmt->bindValue(':search_query', '%' . $search_query . '%', PDO::PARAM_STR);
+}
+if ($category_filter !== '') {
+    $count_stmt->bindValue(':category_id', $category_filter, PDO::PARAM_INT);
+}
+if ($subcategory_filter !== '') {
+    $count_stmt->bindValue(':subcategory_id', $subcategory_filter, PDO::PARAM_INT);
+}
+
+$count_stmt->execute();
+$total_products = $count_stmt->fetchColumn();
+$total_pages = ceil($total_products / $items_per_page);
 
 // Проверяем, авторизован ли пользователь
 $is_logged_in = isset($_SESSION['user_id']);
@@ -103,77 +144,105 @@ $username = $is_logged_in ? $_SESSION['username'] : '';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body, h1, h2, h3, h4, h5, h6, p, a, .navbar-custom, .card, .list-group-item {
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        a,
+        .navbar-custom,
+        .card,
+        .list-group-item {
             font-family: 'Nunito Sans', sans-serif;
         }
+
         .navbar-custom {
             background-color: #0056b3;
             padding: 1.5rem 1rem;
         }
-        .navbar-custom .navbar-brand, 
+
+        .navbar-custom .navbar-brand,
         .navbar-custom .nav-link {
             color: white;
             font-size: 1.1rem;
         }
+
         .navbar-custom .nav-link {
             transition: color 0.3s ease, transform 0.3s ease;
         }
+
         .navbar-custom .nav-link:hover {
             color: #ffc107;
             transform: scale(1.1);
         }
+
         .navbar-toggler {
             border-color: rgba(255, 255, 255, 0.5);
         }
+
         .navbar-toggler-icon {
             background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255, 255, 255, 0.5%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
         }
+
         .card {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             height: 100%;
         }
+
         .card img {
             object-fit: cover;
             height: 200px;
         }
+
         .card-body {
             flex: 1;
             display: flex;
             flex-direction: column;
         }
+
         .card-text {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+
         .card-text.description {
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
-            -webkit-line-clamp: 3; /* Количество строк для обрезки */
+            -webkit-line-clamp: 3;
+            /* Количество строк для обрезки */
             -webkit-box-orient: vertical;
         }
+
         .category-icon {
             margin-right: 10px;
             font-size: 1.2rem;
             color: #0056b3;
         }
+
         .subcategory-icon {
             margin-right: 10px;
             font-size: 1rem;
             color: #0056b3;
         }
+
         .list-group-item a {
             text-decoration: none;
-            color: #0056b3; /* Цвет текста ссылки, можно заменить на любой другой */
+            color: #0056b3;
+            /* Цвет текста ссылки, можно заменить на любой другой */
         }
 
         .list-group-item a:hover {
-            color: #003d7a; /* Цвет текста ссылки при наведении, можно заменить на любой другой */
+            color: #003d7a;
+            /* Цвет текста ссылки при наведении, можно заменить на любой другой */
         }
-        
+
         /* Стили для кнопок */
         .btn {
             border-radius: 50px;
@@ -205,25 +274,32 @@ $username = $is_logged_in ? $_SESSION['username'] : '';
         .btn-danger:hover {
             background-color: #c82333;
         }
+
         /* Стили для цены */
-.card-text.price {
-    font-size: 1.1rem; /* Чуть больший размер шрифта */
-    font-weight: 600; /* Полужирный шрифт */
-    color: #333; /* Основной цвет текста */
-    margin-bottom: 12px; /* Отступ снизу */
-}
+        .card-text.price {
+            font-size: 1.1rem;
+            /* Чуть больший размер шрифта */
+            font-weight: 600;
+            /* Полужирный шрифт */
+            color: #333;
+            /* Основной цвет текста */
+            margin-bottom: 12px;
+            /* Отступ снизу */
+        }
 
-/* Стили для цены в долларах */
-.card-text .price-usd {
-    color: #28a745; /* Зеленый цвет для USD */
-    margin-right: 5px; /* Отступ справа */
-}
+        /* Стили для цены в долларах */
+        .card-text .price-usd {
+            color: #28a745;
+            /* Зеленый цвет для USD */
+            margin-right: 5px;
+            /* Отступ справа */
+        }
 
-/* Стили для цены в тенге */
-.card-text .price-kzt {
-    color: #007bff; /* Синий цвет для KZT */
-}
-
+        /* Стили для цены в тенге */
+        .card-text .price-kzt {
+            color: #007bff;
+            /* Синий цвет для KZT */
+        }
     </style>
 </head>
 
@@ -293,9 +369,9 @@ $username = $is_logged_in ? $_SESSION['username'] : '';
                                         <h5 class="card-title"><?= htmlspecialchars($product['name']) ?></h5>
                                         <p class="card-text description"><?= htmlspecialchars($product['description']) ?></p>
                                         <p class="card-text price">
-    <strong class="price-usd"><?= htmlspecialchars($product['price']) ?> $</strong> / 
-    <strong class="price-kzt"><?= number_format($price_in_kzt, 2, ',', ' ') ?> ₸</strong>
-</p>
+                                            <strong class="price-usd"><?= htmlspecialchars($product['price']) ?> $</strong> /
+                                            <strong class="price-kzt"><?= number_format($price_in_kzt, 2, ',', ' ') ?> ₸</strong>
+                                        </p>
 
                                         <p class="card-text"><strong>Категория:</strong> <?= htmlspecialchars($product['category_name']) ?></p>
                                         <p class="card-text"><strong>Подкатегория:</strong> <?= htmlspecialchars($product['subcategory_name']) ?></p>
@@ -312,11 +388,32 @@ $username = $is_logged_in ? $_SESSION['username'] : '';
                         </div>
                     <?php endif; ?>
                 </div>
+
+                <!-- Пагинация -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item <?= $current_page <= 1 ? 'disabled' : '' ?>">
+                            <a class="page-link" href="?page=<?= $current_page - 1 ?>&search=<?= htmlspecialchars($search_query) ?>&category_id=<?= $category_filter ?>&subcategory_id=<?= $subcategory_filter ?>" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                            <li class="page-item <?= $current_page == $i ? 'active' : '' ?>">
+                                <a class="page-link" href="?page=<?= $i ?>&search=<?= htmlspecialchars($search_query) ?>&category_id=<?= $category_filter ?>&subcategory_id=<?= $subcategory_filter ?>"><?= $i ?></a>
+                            </li>
+                        <?php endfor; ?>
+                        <li class="page-item <?= $current_page >= $total_pages ? 'disabled' : '' ?>">
+                            <a class="page-link" href="?page=<?= $current_page + 1 ?>&search=<?= htmlspecialchars($search_query) ?>&category_id=<?= $category_filter ?>&subcategory_id=<?= $subcategory_filter ?>" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
     <div>
-    <?php include 'footer.php'; ?>
+        <?php include 'footer.php'; ?>
     </div>
 
     <!-- Подключение скриптов -->
