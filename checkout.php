@@ -57,8 +57,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Подсчет общей суммы заказа в тенге
     $total_in_kzt = $total * $exchange_rate;
 
+    // Определение стоимости доставки
+    $delivery_fee_kzt = 0;
+
+    if ($total_in_kzt > 0 && $total_in_kzt < 200000) {
+        $delivery_fee_kzt = 3000;
+    } elseif ($total_in_kzt >= 200000 && $total_in_kzt < 400000) {
+        $delivery_fee_kzt = 2000;
+    } elseif ($total_in_kzt >= 500000) {
+        $delivery_fee_kzt = 0; // Бесплатная доставка
+    }
+
+    // Общая сумма с учетом доставки
+    $grand_total_kzt = $total_in_kzt + $delivery_fee_kzt;
+
     // Создание нового заказа в базе данных с учетом времени Алматы
-    $stmt = $pdo->prepare("INSERT INTO orders (user_id, name, address, city, email, phone, total_amount, total_amount_kzt, status, payment_method, created_at) VALUES (:user_id, :name, :address, :city, :email, :phone, :total, :total_kzt, 'processing', :payment_method, :created_at)");
+    $stmt = $pdo->prepare("INSERT INTO orders (user_id, name, address, city, email, phone, total_amount, total_amount_kzt, delivery_fee_kzt, grand_total_kzt, status, payment_method, created_at) VALUES (:user_id, :name, :address, :city, :email, :phone, :total, :total_kzt, :delivery_fee_kzt, :grand_total_kzt, 'processing', :payment_method, :created_at)");
     $stmt->execute([
         'user_id' => $user_id,
         'name' => $name,
@@ -67,9 +81,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'email' => $email,
         'phone' => $phone,
         'total' => $total,
-        'total_kzt' => $total_in_kzt, // Сохранение суммы в тенге
+        'total_kzt' => $total_in_kzt,
+        'delivery_fee_kzt' => $delivery_fee_kzt,
+        'grand_total_kzt' => $grand_total_kzt,
         'payment_method' => $payment_method,
-        'created_at' => $formatted_time // Используем время Алматы
+        'created_at' => $formatted_time
     ]);
     $order_id = $pdo->lastInsertId();
 
@@ -110,6 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="icon" href="/logo.jpg" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             background-color: #f8f9fa;
@@ -216,17 +233,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailPattern.test(email)) {
-                alert('Введите корректный email.');
-                return false;
-            }
-            
-            const phonePattern = /^\d{10,15}$/;
-            if (!phonePattern.test(phone)) {
-                alert('Введите корректный номер телефона от 10 до 15 цифр.');
+                Swal.fire({
+                    icon: "error",
+                    title: "Введите корректный email.",
+                });
                 return false;
             }
 
-            return true; 
+            const phonePattern = /^\d{10,15}$/;
+            if (!phonePattern.test(phone)) {
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Неверный формат номера телефона",
+                    text: "Введите корректный номер телефона от 10 до 15 цифр.",
+                });
+                return false;
+            }
+
+            return true;
         }
     </script>
 </body>

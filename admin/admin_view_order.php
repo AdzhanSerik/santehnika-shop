@@ -75,7 +75,7 @@ $payment_method = isset($payment_translation[$order['payment_method']]) ? $payme
 
 <body>
     <?php include 'header.php'; ?>
-    <div class="container mt-5">
+    <div class="container mt-5 mb-5">
         <h1>Просмотр заказа #<?= $order['id'] ?></h1>
 
         <!-- Уведомление об успешном обновлении статуса -->
@@ -99,6 +99,8 @@ $payment_method = isset($payment_translation[$order['payment_method']]) ? $payme
                 <p><strong>Город:</strong> <?= htmlspecialchars($order['city']) ?></p>
                 <p><strong>Телефон:</strong> <?= htmlspecialchars($order['phone']) ?></p>
                 <p><strong>Общая сумма на момент покупки:</strong> <?= htmlspecialchars($order['total_amount']) ?> $ / <?= htmlspecialchars(number_format($order['total_amount_kzt'], 2, ',', ' ')) ?> ₸</p>
+                <p><strong>Стоимость доставки:</strong> <?= htmlspecialchars(number_format($order['delivery_fee_kzt'], 2, ',', ' ')) ?> ₸</p>
+                <p><strong>Итоговая сумма:</strong> <?= htmlspecialchars(number_format($order['grand_total_kzt'], 2, ',', ' ')) ?> ₸</p>
                 <p><strong>Дата создания:</strong> <?= htmlspecialchars($order['created_at']) ?></p>
                 <p><strong>Способ оплаты:</strong> <?= htmlspecialchars($payment_method) ?></p>
                 <form method="POST">
@@ -132,7 +134,7 @@ $payment_method = isset($payment_translation[$order['payment_method']]) ? $payme
                         <td><?= htmlspecialchars($item['name']) ?></td>
                         <td><?= htmlspecialchars($item['quantity']) ?></td>
                         <td><?= htmlspecialchars($item['price']) ?> $ / <?= htmlspecialchars(number_format($item['price_kzt'], 2, ',', ' ')) ?> ₸</td>
-                        <td><?= htmlspecialchars($item['quantity'] * $item['price']) ?> $</td>
+                        <td><?= htmlspecialchars($item['quantity'] * $item['price']) ?> $ / <?= htmlspecialchars(number_format($item['quantity'] * $item['price_kzt'], 2, ',', ' ')) ?> ₸</td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

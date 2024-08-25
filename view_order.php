@@ -6,7 +6,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-include './dataBase/db.php'; // Подключаемся к базе данных
+include './dataBase/db.php';
 
 // Получаем ID заказа из URL
 $order_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -30,7 +30,12 @@ if (!$order) {
 }
 
 // Получаем товары из заказа
-$stmt = $pdo->prepare("SELECT order_items.*, products.name, products.image, (order_items.price * order_items.quantity) AS total_price, (order_items.price_kzt * order_items.quantity) AS total_price_kzt FROM order_items JOIN products ON order_items.product_id = products.id WHERE order_items.order_id = :order_id");
+$stmt = $pdo->prepare("SELECT order_items.*, products.name, products.image, 
+                              (order_items.price * order_items.quantity) AS total_price, 
+                              (order_items.price_kzt * order_items.quantity) AS total_price_kzt 
+                       FROM order_items 
+                       JOIN products ON order_items.product_id = products.id 
+                       WHERE order_items.order_id = :order_id");
 $stmt->execute(['order_id' => $order_id]);
 $order_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -68,9 +73,11 @@ $payment_method = isset($payment_translation[$order['payment_method']]) ? $payme
             max-width: 100px;
             height: auto;
         }
+
         .scrollable-table {
             overflow-x: auto;
         }
+
         @media (max-width: 768px) {
             .scrollable-table {
                 -webkit-overflow-scrolling: touch;
@@ -94,6 +101,8 @@ $payment_method = isset($payment_translation[$order['payment_method']]) ? $payme
                 <p><strong>Email:</strong> <?= htmlspecialchars($order['email']) ?></p>
                 <p><strong>Телефон:</strong> <?= htmlspecialchars($order['phone']) ?></p>
                 <p><strong>Общая сумма на момент покупки:</strong> <?= htmlspecialchars($order['total_amount']) ?> $ / <?= htmlspecialchars(number_format($order['total_amount_kzt'], 2, ',', ' ')) ?> ₸</p>
+                <p><strong>Стоимость доставки:</strong> <?= htmlspecialchars(number_format($order['delivery_fee_kzt'], 2, ',', ' ')) ?> ₸</p>
+                <p><strong>Итоговая сумма:</strong> <?= htmlspecialchars(number_format($order['grand_total_kzt'], 2, ',', ' ')) ?> ₸</p>
                 <p><strong>Статус:</strong> <?= htmlspecialchars($order_status) ?></p>
                 <p><strong>Дата создания:</strong> <?= htmlspecialchars($order['created_at']) ?></p>
                 <p><strong>Способ оплаты:</strong> <?= htmlspecialchars($payment_method) ?></p>

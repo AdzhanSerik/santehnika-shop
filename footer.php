@@ -3,7 +3,7 @@
         <div class="row">
             <!-- Логотип -->
             <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
-            <span class=" fw-bold fs-2">Опто Маркет</span> 
+                <span class=" fw-bold fs-2">Опто Маркет</span>
             </div>
 
             <!-- О нас -->
@@ -28,7 +28,7 @@
 
     <!-- Подпись -->
     <div class="text-center p-3" style="background-color: #0056b3; color: white;">
-        © Опто Маркет, создан 2024 года
+        © Опто Маркет, 2024 г.
     </div>
 </footer>
 

@@ -128,6 +128,8 @@ $status_translation = [
                         <th>ID заказа</th>
                         <th>Общая сумма (USD)</th>
                         <th>Общая сумма (KZT)</th>
+                        <th>Стоимость доставки (KZT)</th>
+                        <th>Итоговая сумма (KZT)</th>
                         <th>Статус</th>
                         <th>Дата создания</th>
                         <th>Действия</th>
@@ -139,6 +141,8 @@ $status_translation = [
                             <td><?= htmlspecialchars($order['id']) ?></td>
                             <td><?= htmlspecialchars($order['total_amount']) ?> $</td>
                             <td><?= htmlspecialchars(number_format($order['total_amount_kzt'], 2, ',', ' ')) ?> ₸</td>
+                            <td><?= htmlspecialchars(number_format($order['delivery_fee_kzt'], 2, ',', ' ')) ?> ₸</td>
+                            <td><?= htmlspecialchars(number_format($order['grand_total_kzt'], 2, ',', ' ')) ?> ₸</td>
                             <td><?= htmlspecialchars($status_translation[$order['status']]) ?></td>
                             <td><?= htmlspecialchars($order['created_at']) ?></td>
                             <td>

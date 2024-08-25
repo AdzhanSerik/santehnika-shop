@@ -20,7 +20,7 @@ if (isset($_GET['search'])) {
 }
 
 // Базовый SQL-запрос
-$sql = "SELECT orders.id, orders.total_amount, orders.status, orders.created_at, users.username 
+$sql = "SELECT orders.id, orders.total_amount, orders.total_amount_kzt, orders.delivery_fee_kzt, orders.grand_total_kzt, orders.status, orders.created_at, users.username 
         FROM orders 
         LEFT JOIN users ON orders.user_id = users.id";
 
@@ -92,7 +92,10 @@ $status_translation = [
                 <tr>
                     <th>ID заказа</th>
                     <th>Пользователь</th>
-                    <th>Общая сумма</th>
+                    <th>Общая сумма (USD)</th>
+                    <th>Общая сумма (KZT)</th>
+                    <th>Стоимость доставки (KZT)</th>
+                    <th>Итоговая сумма (KZT)</th>
                     <th>Статус</th>
                     <th>Дата создания</th>
                     <th>Действия</th>
@@ -105,9 +108,12 @@ $status_translation = [
                         $status = isset($status_translation[$order['status']]) ? $status_translation[$order['status']] : $order['status'];
                         ?>
                         <tr>
-                            <td><?= $order['id'] ?></td>
+                            <td><?= htmlspecialchars($order['id']) ?></td>
                             <td><?= $order['username'] ? htmlspecialchars($order['username']) : 'Гость' ?></td>
                             <td><?= htmlspecialchars($order['total_amount']) ?> $</td>
+                            <td><?= htmlspecialchars(number_format($order['total_amount_kzt'], 2, ',', ' ')) ?> ₸</td>
+                            <td><?= htmlspecialchars(number_format($order['delivery_fee_kzt'], 2, ',', ' ')) ?> ₸</td>
+                            <td><?= htmlspecialchars(number_format($order['grand_total_kzt'], 2, ',', ' ')) ?> ₸</td>
                             <td><?= htmlspecialchars($status) ?></td>
                             <td><?= htmlspecialchars($order['created_at']) ?></td>
                             <td>
@@ -117,7 +123,7 @@ $status_translation = [
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="6" class="text-center">Заказы не найдены</td>
+                        <td colspan="9" class="text-center">Заказы не найдены</td>
                     </tr>
                 <?php endif; ?>
             </tbody>

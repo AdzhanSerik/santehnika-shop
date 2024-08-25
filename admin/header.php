@@ -13,6 +13,9 @@
                     <a class="nav-link" href="admin_categories.php">Категории</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="admin_subcategories.php">Подкатегории</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="admin_orders.php">Заказы</a>
                 </li>
                 <li class="nav-item">
