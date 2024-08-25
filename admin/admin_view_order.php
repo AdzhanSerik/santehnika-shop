@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
@@ -19,6 +20,16 @@ if ($order_id === 0) {
     exit();
 }
 
+// Получаем информацию о заказе (до обработки формы)
+$stmt = $pdo->prepare("SELECT orders.*, users.username FROM orders LEFT JOIN users ON orders.user_id = users.id WHERE orders.id = :order_id");
+$stmt->execute(['order_id' => $order_id]);
+$order = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$order) {
+    header('Location: admin_orders.php');
+    exit();
+}
+
 // Обработка формы изменения статуса
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $new_status = htmlspecialchars($_POST['status']);
@@ -28,25 +39,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt = $pdo->prepare("UPDATE orders SET status = :status, updated_at = :updated_at WHERE id = :id");
     $stmt->execute([
         'status' => $new_status,
-        'updated_at' => $formatted_time, // Время обновления статуса с учетом часового пояса
+        'updated_at' => $formatted_time,
         'id' => $order_id
     ]);
 
     // Устанавливаем сообщение об успешном обновлении статуса
     $_SESSION['status_updated'] = "Статус заказа #$order_id был успешно обновлен.";
 
-    // Перенаправляем обратно на страницу просмотра заказа, чтобы избежать повторного отправки формы
+    $client_email = htmlspecialchars($order['email']); // Используем email клиента
+
+    $status_translation = [
+        'processing' => 'В обработке',
+        'shipped' => 'Отправлен',
+        'delivered' => 'Доставлен',
+        'canceled' => 'Отменен'
+    ];
+
+    $new_status_rus = isset($status_translation[$new_status]) ? $status_translation[$new_status] : $new_status;
+
+    require_once('../phpmailer/PHPMailerAutoload.php');
+    $mail = new PHPMailer;
+    $mail->CharSet = 'utf-8';
+    $mail->isSMTP();
+    $mail->Host = 'smtp.mail.ru';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'opto.marketkz@mail.ru';
+    $mail->Password = 'ym3LGUwevvY4Yq2hGYnQ';
+    $mail->SMTPSecure = 'ssl';
+    $mail->Port = 465;
+    $mail->setFrom('opto.marketkz@mail.ru');
+    $mail->addAddress($client_email); // Кому будет уходить письмо (email клиента)
+    $mail->isHTML(true);
+    $mail->Subject = 'Опто-Маркет';
+    $mail->Body = "Заказ №" . $order_id . " был обновлен. Новый статус: " . $new_status_rus;
+    $mail->AltBody = '';
+
+    if (!$mail->send()) {
+        echo 'Error';
+    } else {
+        echo "Рахмет!";
+    }
+
+    // Перенаправляем обратно на страницу просмотра заказа
     header("Location: admin_view_order.php?id=$order_id");
-    exit();
-}
-
-// Получаем информацию о заказе
-$stmt = $pdo->prepare("SELECT orders.*, users.username FROM orders LEFT JOIN users ON orders.user_id = users.id WHERE orders.id = :order_id");
-$stmt->execute(['order_id' => $order_id]);
-$order = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$order) {
-    header('Location: admin_orders.php');
     exit();
 }
 
@@ -83,8 +118,7 @@ $payment_method = isset($payment_translation[$order['payment_method']]) ? $payme
             <div class="alert alert-success">
                 <?= $_SESSION['status_updated'] ?>
             </div>
-            <?php unset($_SESSION['status_updated']); // Удаляем сообщение из сессии после отображения 
-            ?>
+            <?php unset($_SESSION['status_updated']); ?>
         <?php endif; ?>
 
         <div class="card mb-4">

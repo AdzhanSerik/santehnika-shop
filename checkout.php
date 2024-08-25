@@ -108,8 +108,69 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Переход на страницу оплаты или завершения заказа
     if ($payment_method === 'qr') {
+        $email = 'santehshop2022@gmail.com';
+        require_once('phpmailer/PHPMailerAutoload.php');
+        $mail = new PHPMailer;
+        $mail->CharSet = 'utf-8';
+        $mail->isSMTP();                                      // Set mailer to use SMTP
+        $mail->Host = 'smtp.mail.ru';                                                                                              // Specify main and backup SMTP servers
+        $mail->SMTPAuth = true;                               // Enable SMTP authentication
+        $mail->Username = 'opto.marketkz@mail.ru'; // Ваш логин от почты с которой будут отправляться письма
+        $mail->Password = 'ym3LGUwevvY4Yq2hGYnQ'; // Ваш пароль от почты с которой будут отправляться письма
+        $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
+        $mail->Port = 465; // TCP port to connect to / этот порт может отличаться у других провайдеров
+        $mail->setFrom('opto.marketkz@mail.ru'); // от кого будет уходить письмо?
+        $mail->addAddress($email);     // Кому будет уходить письмо
+        $mail->isHTML(true);                                  // Set email format to HTML
+        $mail->Subject = 'Опто-Маркет';
+        $mail->Body = "
+        Заказ от {$name},<br><br>
+        Номер заказа {$order_id} был успешно оформлен.<br>
+        Общая сумма заказа: " . number_format($grand_total_kzt, 2, ',', ' ') . " ₸.<br><br>
+        Метод оплаты заказа: Kaspi QR.<br>
+        <br>
+        Надо проверить в админке список заказов!
+    ";
+        $mail->AltBody = '';
+        if (!$mail->send()) {
+            echo 'Error';
+        } else {
+            echo "Рахмет!";
+        }
+
+        header('Location: success.php');
         header('Location: payment_qr.php?order_id=' . $order_id);
     } else {
+        $email = 'santehshop2022@gmail.com';
+        require_once('phpmailer/PHPMailerAutoload.php');
+        $mail = new PHPMailer;
+        $mail->CharSet = 'utf-8';
+        $mail->isSMTP();                                      // Set mailer to use SMTP
+        $mail->Host = 'smtp.mail.ru';                                                                                              // Specify main and backup SMTP servers
+        $mail->SMTPAuth = true;                               // Enable SMTP authentication
+        $mail->Username = 'opto.marketkz@mail.ru'; // Ваш логин от почты с которой будут отправляться письма
+        $mail->Password = 'ym3LGUwevvY4Yq2hGYnQ'; // Ваш пароль от почты с которой будут отправляться письма
+        $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
+        $mail->Port = 465; // TCP port to connect to / этот порт может отличаться у других провайдеров
+        $mail->setFrom('opto.marketkz@mail.ru'); // от кого будет уходить письмо?
+        $mail->addAddress($email);     // Кому будет уходить письмо
+        $mail->isHTML(true);                                  // Set email format to HTML
+        $mail->Subject = 'Опто-Маркет';
+        $mail->Body = "
+        Заказ от {$name},<br><br>
+        Номер заказа {$order_id} был успешно оформлен.<br>
+        Общая сумма заказа: " . number_format($grand_total_kzt, 2, ',', ' ') . " ₸.<br><br>
+        Метод оплаты заказа: Наличными.<br>
+        <br>
+        Надо проверить в админке список заказов!
+    ";
+        $mail->AltBody = '';
+        if (!$mail->send()) {
+            echo 'Error';
+        } else {
+            echo "Рахмет!";
+        }
+
         header('Location: success.php');
     }
     exit();
