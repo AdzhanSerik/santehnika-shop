@@ -43,7 +43,7 @@ $username = $is_logged_in ? $_SESSION['username'] : '';
 <body>
 <nav class="navbar navbar-expand-lg navbar-custom">
     <div class="container-fluid">
-        <a class="navbar-brand fw-bold fs-5" href="index.php">Опто Маркет</a> <!-- Убрана иконка -->
+        <a class="navbar-brand fw-bold fs-5" href="index.php">Опто Маркет</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -89,7 +89,21 @@ $username = $is_logged_in ? $_SESSION['username'] : '';
     </div>
 </nav>
 
-<!-- Подключение Bootstrap 5 JS -->
+<!-- Подключение jQuery и Bootstrap 5 JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $(document).on('click', function(event) {
+            if (!$(event.target).closest('.navbar').length) {
+                $('#navbarNav').collapse('hide');
+            }
+        });
+        $('.navbar-toggler').on('click', function(event) {
+            event.stopPropagation();
+        });
+    });
+</script>
 </body>
 </html>

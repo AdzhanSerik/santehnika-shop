@@ -312,40 +312,40 @@ $username = $is_logged_in ? $_SESSION['username'] : '';
         <div class="row">
             <!-- Боковая панель категорий -->
             <div class="col-md-3">
-                <h4>Категории</h4>
-                <div class="accordion" id="categoryAccordion">
-                    <?php foreach ($categories as $category): ?>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="heading<?= $category['id'] ?>">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $category['id'] ?>" aria-expanded="false" aria-controls="collapse<?= $category['id'] ?>">
-                                    <i class="fas fa-cogs category-icon"></i> <?= htmlspecialchars($category['name']) ?>
-                                </button>
-                            </h2>
-                            <div id="collapse<?= $category['id'] ?>" class="accordion-collapse collapse" aria-labelledby="heading<?= $category['id'] ?>" data-bs-parent="#categoryAccordion">
-                                <div class="accordion-body">
-                                    <ul class="list-group">
-                                        <li class="list-group-item"><a href="index.php?category_id=<?= $category['id'] ?>"><i class="fas fa-box"></i> Все товары в категории</a></li>
-                                        <?php
-                                        $subcategories = $pdo->prepare("SELECT * FROM subcategories WHERE category_id = :category_id");
-                                        $subcategories->execute(['category_id' => $category['id']]);
-                                        $subcategories = $subcategories->fetchAll(PDO::FETCH_ASSOC);
-                                        ?>
-                                        <?php if (count($subcategories) > 0): ?>
-                                            <?php foreach ($subcategories as $subcategory): ?>
-                                                <li class="list-group-item">
-                                                    <a href="index.php?subcategory_id=<?= $subcategory['id'] ?>"><i class="fas fa-tag subcategory-icon"></i> <?= htmlspecialchars($subcategory['name']) ?></a>
-                                                </li>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <li class="list-group-item">Нет подкатегорий</li>
-                                        <?php endif; ?>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
+    <h4>Категории</h4>
+    <div class="accordion" id="categoryAccordion">
+        <?php foreach ($categories as $category): ?>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading<?= $category['id'] ?>">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $category['id'] ?>" aria-expanded="false" aria-controls="collapse<?= $category['id'] ?>">
+                        <i class="fas fa-cogs category-icon"></i> <?= htmlspecialchars($category['name']) ?>
+                    </button>
+                </h2>
+                <div id="collapse<?= $category['id'] ?>" class="accordion-collapse collapse" aria-labelledby="heading<?= $category['id'] ?>" data-bs-parent="#categoryAccordion">
+                    <div class="accordion-body">
+                        <ul class="list-group">
+                            <li class="list-group-item"><a href="index.php?category_id=<?= $category['id'] ?>"><i class="fas fa-box"></i> Все товары в категории</a></li>
+                            <?php
+                            $subcategories = $pdo->prepare("SELECT * FROM subcategories WHERE category_id = :category_id");
+                            $subcategories->execute(['category_id' => $category['id']]);
+                            $subcategories = $subcategories->fetchAll(PDO::FETCH_ASSOC);
+                            ?>
+                            <?php if (count($subcategories) > 0): ?>
+                                <?php foreach ($subcategories as $subcategory): ?>
+                                    <li class="list-group-item">
+                                        <a href="index.php?subcategory_id=<?= $subcategory['id'] ?>"><i class="fas fa-tag subcategory-icon"></i> <?= htmlspecialchars($subcategory['name']) ?></a>
+                                    </li>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <li class="list-group-item">Нет подкатегорий</li>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
                 </div>
             </div>
+        <?php endforeach; ?>
+    </div>
+</div>
 
             <!-- Основной контент с товарами -->
             <div class="col-md-9">
@@ -419,6 +419,21 @@ $username = $is_logged_in ? $_SESSION['username'] : '';
     <!-- Подключение скриптов -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+          $(document).ready(function() {
+        $(document).on('click', function(event) {
+            if (!$(event.target).closest('#categoryAccordion').length) {
+
+                $('#categoryAccordion .accordion-collapse.show').collapse('hide');
+            }
+        });
+        
+        $('#categoryAccordion .accordion-button, #categoryAccordion .list-group-item a').on('click', function(event) {
+            event.stopPropagation();
+        });
+    });
+    </script>
 </body>
 
 </html>
